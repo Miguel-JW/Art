@@ -1,0 +1,247 @@
+[
+  {
+    "slug": "javascript-assíncrono-promises-async-await",
+    "titulo": "JavaScript Assíncrono: do callback hell ao async/await",
+    "autor": "Marina Fonseca",
+    "cargo": "Engenheira de Software Sênior",
+    "data": "2024-06-10",
+    "categoria": "JavaScript",
+    "tempoLeitura": "8 min",
+    "resumo": "Uma jornada pela evolução do código assíncrono no JavaScript: callbacks, Promises e a elegância do async/await explicados com exemplos reais.",
+    "capa": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&q=85",
+    "conteudo": [
+      {
+        "tipo": "paragrafo",
+        "texto": "Antes de entender async/await, é fundamental compreender por que o JavaScript precisou evoluir sua forma de lidar com operações assíncronas. O motor JavaScript é single-threaded — ele executa uma tarefa por vez. Quando uma operação demorada entra em cena, como uma requisição de rede ou leitura de arquivo, o código não pode simplesmente esperar parado."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "O problema com callbacks"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "No início, callbacks eram a solução. Você passava uma função como argumento para ser chamada quando a operação terminasse. Funcionava, mas escalar esse padrão levava ao famoso 'callback hell': pirâmides de funções aninhadas que tornavam o código praticamente ilegível e impossível de manter."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Callback hell — evite isso\nbuscarUsuario(id, (usuario) => {\n  buscarPedidos(usuario.id, (pedidos) => {\n    buscarDetalhes(pedidos[0].id, (detalhes) => {\n      // Três níveis de indentação e ainda não acabou...\n    });\n  });\n});"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Promises: uma promessa cumprida"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "As Promises chegaram com o ES6 para resolver exatamente esse problema. Uma Promise representa um valor que pode estar disponível agora, no futuro, ou nunca. Ela pode estar em três estados: pending (aguardando), fulfilled (resolvida com sucesso) ou rejected (rejeitada com erro)."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Com Promises\nbuscarUsuario(id)\n  .then(usuario => buscarPedidos(usuario.id))\n  .then(pedidos => buscarDetalhes(pedidos[0].id))\n  .then(detalhes => console.log(detalhes))\n  .catch(erro => console.error(erro));"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "async/await: a forma moderna"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "O async/await, introduzido no ES2017, é açúcar sintático sobre Promises. Ele não substitui Promises — é construído sobre elas. A palavra-chave async define uma função que sempre retorna uma Promise. Dentro dela, await pausa a execução até que a Promise seja resolvida, tornando o código assíncrono tão legível quanto código síncrono."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Com async/await — limpo e legível\nasync function carregarDetalhes(id) {\n  try {\n    const usuario = await buscarUsuario(id);\n    const pedidos = await buscarPedidos(usuario.id);\n    const detalhes = await buscarDetalhes(pedidos[0].id);\n    return detalhes;\n  } catch (erro) {\n    console.error('Algo deu errado:', erro);\n  }\n}"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Um ponto importante: await só pode ser usado dentro de funções marcadas com async. Tentar usar await fora desse contexto resultará em um erro de sintaxe. Com o Top-level await (ES2022), é possível usar await diretamente em módulos ES, sem precisar de uma função wrapper."
+      }
+    ]
+  },
+  {
+    "slug": "react-server-components-guia-completo",
+    "titulo": "React Server Components: o que mudou de verdade",
+    "autor": "Thiago Cavalcante",
+    "cargo": "Desenvolvedor Frontend",
+    "data": "2024-07-02",
+    "categoria": "React",
+    "tempoLeitura": "10 min",
+    "resumo": "React Server Components mudam fundamentalmente como pensamos sobre renderização. Entenda o que são, como diferem dos Client Components e quando usar cada um.",
+    "capa": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&q=85",
+    "conteudo": [
+      {
+        "tipo": "paragrafo",
+        "texto": "Quando React anunciou os Server Components, muita gente ficou confusa. Afinal, o React sempre foi uma biblioteca focada no cliente. A confusão é compreensível, mas React Server Components (RSC) representam uma evolução genuína — não apenas uma feature nova, mas uma mudança de paradigma."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "O que são Server Components?"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Server Components são componentes React que executam exclusivamente no servidor. Eles nunca são enviados ao cliente como JavaScript — apenas seu output HTML é transmitido. Isso tem implicações profundas: você pode acessar banco de dados diretamente, ler arquivos do sistema, usar variáveis de ambiente secretas, tudo isso sem expor nada ao navegador."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Client Components vs. Server Components"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "A distinção fundamental é simples: se o componente precisa de interatividade (useState, useEffect, event handlers), é um Client Component e deve ter 'use client' no topo. Se ele apenas exibe dados, pode ser um Server Component — que é o padrão no App Router do Next.js."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Server Component — sem 'use client'\nasync function ListaArtigos() {\n  // Acesso direto ao banco de dados no servidor\n  const artigos = await db.artigos.findMany();\n  return (\n    <ul>\n      {artigos.map(a => <li key={a.id}>{a.titulo}</li>)}\n    </ul>\n  );\n}"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Por que isso importa para performance?"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "O JavaScript enviado ao cliente define diretamente o tempo que o usuário espera para a página ser interativa. Com Server Components, código que antes fazia parte do bundle do cliente (como bibliotecas de formatação de data, markdown parsers, ORMs) pode rodar no servidor e desaparecer completamente do bundle enviado ao usuário."
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "O resultado prático é uma redução significativa do JavaScript que precisa ser baixado, analisado e executado pelo navegador. Páginas mais leves, métricas de Web Vitals melhores, e uma experiência mais rápida — especialmente em dispositivos com hardware limitado e conexões lentas."
+      }
+    ]
+  },
+  {
+    "slug": "typescript-generics-na-pratica",
+    "titulo": "TypeScript Generics na prática: tipagem que escala",
+    "autor": "Camila Rocha",
+    "cargo": "Tech Lead",
+    "data": "2024-07-18",
+    "categoria": "TypeScript",
+    "tempoLeitura": "7 min",
+    "resumo": "Generics são um dos recursos mais poderosos e subutilizados do TypeScript. Aprenda a criar funções e tipos reutilizáveis que mantêm segurança de tipos sem abrir mão de flexibilidade.",
+    "capa": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=1200&q=85",
+    "conteudo": [
+      {
+        "tipo": "paragrafo",
+        "texto": "Se você usa TypeScript mas ainda não se sentiu confortável com Generics, provavelmente está repetindo código desnecessariamente ou recorrendo ao tipo any para resolver situações onde o tipo precisa ser flexível. Generics resolvem esse problema com elegância."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "O problema que Generics resolvem"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Imagine uma função que retorna o primeiro elemento de um array. Sem Generics, você teria que escrever uma versão para string[], outra para number[], outra para qualquer outro tipo — ou usar any e perder toda a segurança de tipos. Generics permitem parametrizar o tipo, como se fosse uma variável para tipos."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Sem Generics — redundante e inseguro\nfunction primeiroString(arr: string[]): string { return arr[0]; }\nfunction primeiroNumber(arr: number[]): number { return arr[0]; }\n\n// Com Generics — uma função, qualquer tipo\nfunction primeiro<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nconst nome = primeiro(['Ana', 'Bruno']); // TypeScript sabe: string\nconst nota = primeiro([9.5, 8.0]);       // TypeScript sabe: number"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Constraints: restringindo os tipos genéricos"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Às vezes você quer que o tipo genérico seja flexível, mas não completamente arbitrário. Com a cláusula extends, você impõe restrições: o tipo deve ter pelo menos certas propriedades. Isso permite que você acesse propriedades específicas dentro da função sem perder a flexibilidade do Generic."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// T deve ter uma propriedade 'id' do tipo string\nfunction buscarPorId<T extends { id: string }>(items: T[], id: string): T | undefined {\n  return items.find(item => item.id === id);\n}\n\n// Funciona com qualquer objeto que tenha 'id'\nbuscarPorId(usuarios, 'u-123');    // Retorna Usuario | undefined\nbuscarPorId(produtos, 'p-456');    // Retorna Produto | undefined"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Generics também são fundamentais para construir utilitários de tipos. Os tipos utilitários nativos do TypeScript — Partial<T>, Required<T>, Pick<T, K>, Omit<T, K> — todos são implementados com Generics. Entendê-los não apenas melhora seu código, mas também abre a porta para criar seus próprios utilitários de tipos personalizados."
+      }
+    ]
+  },
+  {
+    "slug": "css-grid-vs-flexbox-quando-usar-cada-um",
+    "titulo": "CSS Grid vs. Flexbox: a decisão que todo desenvolvedor precisa dominar",
+    "autor": "Lucas Ferreira",
+    "cargo": "Desenvolvedor Frontend",
+    "data": "2024-08-05",
+    "categoria": "CSS",
+    "tempoLeitura": "6 min",
+    "resumo": "Grid e Flexbox não competem entre si — eles se complementam. Entenda a diferença conceitual entre os dois e quando cada um é a escolha certa para o seu layout.",
+    "capa": "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=1200&q=85",
+    "conteudo": [
+      {
+        "tipo": "paragrafo",
+        "texto": "A pergunta 'Grid ou Flexbox?' aparece constantemente em fóruns e entrevistas, e a resposta correta quase sempre decepciona quem espera uma regra definitiva: depende. Mais precisamente, depende da dimensão do problema. Essa é a chave para entender os dois."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Flexbox: uma dimensão de cada vez"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Flexbox é uma ferramenta unidimensional. Ele distribui itens em uma única linha ou coluna. Quando você precisa alinhar elementos em uma direção — horizontalmente numa navbar, verticalmente num card, centralizando um botão — Flexbox é a escolha natural. Ele é excepcionalmente bom em distribuir espaço e alinhar itens dentro de um contêiner."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "/* Flexbox brilha em layouts de eixo único */\n.navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.card {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n}"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Grid: duas dimensões simultaneamente"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "CSS Grid é bidimensional. Ele controla linhas e colunas ao mesmo tempo. Quando você precisa posicionar elementos em relação a dois eixos — uma galeria de fotos, um layout de revista, uma dashboard com widgets — Grid é a ferramenta certa. Ele permite definir explicitamente onde cada elemento vai, com controle granular de tamanhos e posições."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "/* Grid brilha em layouts de duas dimensões */\n.dashboard {\n  display: grid;\n  grid-template-columns: 240px 1fr 320px;\n  grid-template-rows: auto 1fr auto;\n  min-height: 100vh;\n}\n\n.galeria {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Na prática, projetos bem estruturados usam os dois. O layout macro da página (header, sidebar, conteúdo principal, footer) vive no Grid. Dentro de cada seção, os componentes usam Flexbox para organizar seus elementos internos. Eles não competem — trabalham em camadas diferentes do mesmo design."
+      }
+    ]
+  },
+  {
+    "slug": "nextjs-app-router-data-fetching",
+    "titulo": "Data Fetching no App Router: Server, Static e Dynamic",
+    "autor": "Ana Beatriz Lima",
+    "cargo": "Engenheira Full-Stack",
+    "data": "2024-08-22",
+    "categoria": "Next.js",
+    "tempoLeitura": "9 min",
+    "resumo": "O App Router do Next.js redefine como buscamos dados. Entenda as diferenças entre SSG, SSR e Server Components, e como force-static e force-dynamic controlam o comportamento de cache.",
+    "capa": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=85",
+    "conteudo": [
+      {
+        "tipo": "paragrafo",
+        "texto": "Se você migrou do Pages Router para o App Router, provavelmente ficou confuso com a mudança na forma de buscar dados. getServerSideProps e getStaticProps desapareceram. No lugar deles, o App Router oferece um modelo mais unificado e — quando entendido — mais poderoso."
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Server Components são async por padrão"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "No App Router, qualquer componente pode ser assíncrono. Você pode chamar fetch diretamente dentro de um Server Component, sem hooks, sem useEffect. O Next.js estende o fetch nativo com um sistema de cache embutido — por padrão, respostas são cacheadas automaticamente."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// app/artigos/page.tsx — Server Component assíncrono\nexport default async function PaginaArtigos() {\n  // fetch cacheado automaticamente pelo Next.js\n  const artigos = await fetch('https://api.exemplo.com/artigos').then(r => r.json());\n\n  return <ListaArtigos artigos={artigos} />;\n}"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "force-static vs force-dynamic"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "Você controla o comportamento de renderização com a exportação de constantes especiais. export const dynamic = 'force-static' força a página a ser gerada estaticamente em tempo de build, mesmo que ela leia cookies ou headers. export const dynamic = 'force-dynamic' garante que a página seja sempre renderizada no servidor a cada requisição, nunca cacheada."
+      },
+      {
+        "tipo": "codigo",
+        "texto": "// Força geração estática (SSG)\nexport const dynamic = 'force-static';\n\n// Força renderização dinâmica (SSR)\nexport const dynamic = 'force-dynamic';\n\n// generateStaticParams para rotas dinâmicas estáticas\nexport async function generateStaticParams() {\n  const artigos = await getArtigos();\n  return artigos.map(a => ({ slug: a.slug }));\n}"
+      },
+      {
+        "tipo": "subtitulo",
+        "texto": "Quando usar cada estratégia"
+      },
+      {
+        "tipo": "paragrafo",
+        "texto": "A regra prática é direta: conteúdo que não muda frequentemente (artigos de blog, páginas de produto, documentação) vai bem com force-static e generateStaticParams. Conteúdo personalizado por usuário (dashboard, carrinho de compras, feed personalizado) precisa de force-dynamic. Conteúdo que muda regularmente mas não em tempo real pode usar revalidate para um cache com validade definida."
+      }
+    ]
+  }
+]
